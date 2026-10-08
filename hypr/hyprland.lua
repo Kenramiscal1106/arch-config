@@ -25,9 +25,15 @@ hl.monitor({
     output   = "",
     mode     = "preferred",
     position = "auto",
-    scale    = "1.0",
-
+    scale    = 1,
 })
+
+-- hl.monitor({
+--     output   = "HDMI-A-1",
+--     mode     = "preferred",
+--     position = "0x-1280",
+--     scale    = 1,
+-- })
 
 
 ---------------------
@@ -36,7 +42,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "dolphin"
+local fileManager = "nautilus"
 local menu        = "fuzzel"
 
 
@@ -93,9 +99,14 @@ hl.env("HYPRCURSOR_SIZE", "24")
 hl.config({
     general = {
         gaps_in                 = 4,
-        gaps_out                = 20,
+        gaps_out                = {
+            top = 10,
+            bottom = 20,
+            left = 20,
+            right = 20
+        },
 
-        border_size             = 3,
+        border_size             = false,
 
         col                     = {
             active_border   = { colors = { "rgba(23CB1Eff)", "rgba(0A190AFF)", "rgb(1D9619)" }, angle = 20 },
@@ -108,41 +119,42 @@ hl.config({
         -- Please see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/ before you turn this on
         allow_tearing           = false,
 
-        layout                  = "dwindle",
+        layout                  = "scrolling",
         resize_corner           = true,
-        extend_border_grab_area = 20
+        extend_border_grab_area = 20,
     },
 
     decoration = {
-        rounding         = 10,
-        rounding_power   = 3,
-
-        -- Change transparency of focused and unfocused windows
-        active_opacity   = 1.0,
-        inactive_opacity = 0.8,
-        motion_blur      = {
+        rounding       = 10,
+        rounding_power = 3,
+        motion_blur    = {
             enabled = true
         },
-
-        shadow           = {
-            enabled      = true,
-            render_power = 3,
-            range        = 30,
-            color        = "#00000050",
-            offset       = { 0, 4 },
+        -- Change transparency of focused and unfocused windows
+        active_opacity = 1.0,
+        -- inactive_opacity = 0.95,
+        shadow         = {
+            enabled        = true,
+            render_power   = 3,
+            range          = 5,
+            color          = {
+                colors = { "rgb(23CB1E)", "rgb(1D9619)" }, angle = 20
+            },
+            color_inactive = "#0000000a",
+            offset         = { 0, 0 },
 
         },
 
-        blur             = {
+        blur           = {
             enabled  = true,
-            size     = 6,
-            passes   = 1,
-            vibrancy = 0.1696,
+            size     = 2,
+            passes   = 4,
+            vibrancy = 0.2,
         },
-        glow             = {
+        glow           = {
             color_inactive = "#000000ff",
-            color = "#ffffff05",
-            enabled = true,
+            -- color = "#ffffff05",
+            -- enabled = true,
             render_power = 3,
             range = 10
         },
@@ -163,26 +175,31 @@ hl.curve("easeInOutCubic", { type = "bezier", points = { { 0.65, 0.05 }, { 0.36,
 hl.curve("linear", { type = "bezier", points = { { 0, 0 }, { 1, 1 } } })
 hl.curve("almostLinear", { type = "bezier", points = { { 0.5, 0.5 }, { 0.75, 1 } } })
 hl.curve("quick", { type = "bezier", points = { { 0.15, 0 }, { 0.1, 1 } } })
+hl.curve("outCirc", { type = "bezier", points = { { 0, 0.55 }, { 0.45, 1 } } })
+hl.curve("inCirc", { type = "bezier", points = { { 0.55, 0 }, { 1, 0.45 } } })
+hl.curve("inOutCirc", { type = "bezier", points = { { 0.85, 0.09 }, { 0.15, 0.91 } } })
 
 -- Default springs
 hl.curve("easy", { type = "spring", mass = 1, stiffness = 238.1191, dampening = 24.21279333 })
+hl.curve("glide", { type = "spring", mass = 1, stiffness = 1000, dampening = 67 })
+hl.curve("glideSlow", { type = "spring", mass = 1, stiffness = 800, dampening = 50 })
 
 hl.animation({ leaf = "global", enabled = true, speed = 10, bezier = "default" })
 hl.animation({ leaf = "border", enabled = true, speed = 5.39, bezier = "easeOutQuint" })
-hl.animation({ leaf = "windows", enabled = true, speed = 10, spring = "easy" })
-hl.animation({ leaf = "windowsIn", enabled = true, speed = 10, spring = "easy", style = "popin 0%" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 10.5, bezier = "easeInOutCubic", style = "popin 0%" })
+hl.animation({ leaf = "windows", enabled = true, speed = 1, spring = "glide", style = "slide" })
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 2.5, bezier = "outCirc", style = "popin 80%" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 2.5, bezier = "inCirc", style = "popin 80%" })
 hl.animation({ leaf = "fadeIn", enabled = true, speed = 1.73, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.46, bezier = "almostLinear" })
 hl.animation({ leaf = "fade", enabled = true, speed = 3.03, bezier = "quick" })
 hl.animation({ leaf = "layers", enabled = true, speed = 3.81, bezier = "easeOutQuint" })
-hl.animation({ leaf = "layersIn", enabled = true, speed = 4, bezier = "easeOutQuint", style = "fade" })
-hl.animation({ leaf = "layersOut", enabled = true, speed = 1.5, bezier = "linear", style = "fade" })
+hl.animation({ leaf = "layersIn", enabled = true, speed = 2, bezier = "outCirc", style = "popin 90%" })
+hl.animation({ leaf = "layersOut", enabled = true, speed = 2.5, bezier = "inCirc", style = "popin 90%" })
 hl.animation({ leaf = "fadeLayersIn", enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
+hl.animation({ leaf = "workspaces", enabled = true, speed = 100, spring = "glide", style = "slide" })
+hl.animation({ leaf = "workspacesIn", enabled = true, speed = 1, spring = "glideSlow", style = "slide" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 3, bezier = "outCirc", style = "fade" })
 hl.animation({ leaf = "zoomFactor", enabled = true, speed = 7, bezier = "quick" })
 -- hl.animation({ leaf = "borderangle", enabled = true, speed = 10, bezier = "linear", style = "loop"})
 -- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
@@ -209,6 +226,7 @@ hl.config({
         preserve_split = true, -- You probably want this
     },
 
+
 })
 
 -- See https://wiki.hypr.land/Configuring/Layouts/Master-Layout/ for more
@@ -222,6 +240,8 @@ hl.config({
 hl.config({
     scrolling = {
         fullscreen_on_one_column = true,
+        column_width = 0.9,
+        follow_min_visible = 0.6,
     },
 })
 
@@ -250,13 +270,14 @@ hl.config({
         kb_options   = "",
         kb_rules     = "",
 
-        follow_mouse = 1,
+        follow_mouse = true,
 
         sensitivity  = 0, -- -1.0 - 1.0, 0 means no modification.
 
         touchpad     = {
             natural_scroll = true,
             scroll_factor = 0.4,
+            tap_button_map = "lmr"
         },
     },
 })
@@ -264,15 +285,21 @@ hl.config({
 hl.gesture({
     fingers = 3,
     direction = "horizontal",
+    action = "scroll_move"
+})
+
+hl.gesture({
+    fingers = 4,
+    direction = "horizontal",
     action = "workspace"
 })
 
 -- Example per-device config
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Devices/ for more
-hl.device({
-    name        = "epic-mouse-v1",
-    sensitivity = -0.5,
-})
+-- hl.device({
+--     name        = "epic-mouse-v1",
+--     sensitivity = -0.5,
+-- })
 
 
 ---------------------
@@ -282,42 +309,82 @@ hl.device({
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
-local closeWindowBind = hl.bind(mainMod .. " + W", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
-hl.bind(mainMod .. " + SHIFT + C",
-    hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 
--- Move focus with mainMod + arrow keys
+
+-- hl.bind(mainMod .. " + SHIFT + C",
+--     hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind("ALT + F4", hl.dsp.exec_cmd("wlogout -b 4"))
+
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + up", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down", hl.dsp.focus({ direction = "down" }))
 
--- Move window position
--- hl.bind(mainMod .. " + SHIFT + left", hl.get_active_window({ direction = "left"}))
+hl.bind("CONTROL + " .. mainMod .. " + left", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind("CONTROL + " .. mainMod .. " + right", hl.dsp.focus({ workspace = "e+1" }))
+
+hl.bind(mainMod .. " + ALT + up", hl.dsp.window.resize({
+    x = 1920 * 0.25,
+    y = 0,
+    relative = true
+}))
+hl.bind(mainMod .. " + ALT + down", hl.dsp.window.resize({
+    x = -(1920 * 0.25),
+    y = 0,
+    relative = true
+}))
+
+
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
+hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + W", hl.dsp.window.close())
+
+
+
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("hyprshot -m region --freeze"))
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.layout("togglesplit")) -- dwindle only
+hl.bind(mainMod .. " + SHIFT + left", hl.dsp.window.move({ direction = "left" }))
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.window.move({ direction = "right" }))
+hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.move({ direction = "up" }))
+hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" }))
+
+hl.bind("CONTROL + SHIFT + " .. mainMod .. " + W", function()
+    local windows = hl.get_windows()
+
+    for _, w in pairs(windows) do
+        hl.dispatch(hl.dsp.window.close({ window = w }))
+    end
+end)
+
+hl.bind("CONTROL + " .. mainMod .. " + W", function()
+    local cws = hl.get_active_workspace()
+    local windows = hl.get_windows({ workspace = cws })
+
+    for _, w in pairs(windows) do
+        hl.dispatch(hl.dsp.window.close({ window = w }))
+    end
+end)
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
+
 for i = 1, 10 do
     local key = i % 10 -- 10 maps to key 0
     hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
 
+
 -- Example special workspace (scratchpad)
-hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+-- hl.bind(mainMod .. " + S", hl.dsp.workspace.toggle_special("magic"))
+-- hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
 
 -- utility opening and locking
-hl.bind("CTRL + " .. mainMod .. " + S", hl.dsp.exec_cmd("hyprshot -m region"))
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
@@ -339,15 +406,22 @@ hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURC
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
 
--- Requires playerctl
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
+-- Volume constraints(Requires playerctl)
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("playerctl next"), { locked = true })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
+
+-- Lid type shi
 
 hl.bind("switch:on:Lid Switch", function()
     hl.monitor({ output = "eDP-1", disabled = true });
-    hl.exec_cmd("systemctl suspend")
+    hl.exec_cmd("hyprlock --grace 0")
     -- h12 = true;
     -- Optional: Restart wallpaper daemon if needed
     -- hl.dsp.exec_cmd("pkill hyprpaper && hyprpaper")
@@ -399,12 +473,15 @@ hl.window_rule({
 
 
 -- Layer rules also return a handle.
--- local overlayLayerRule = hl.layer_rule({
---     name  = "no-anim-overlay",
---     match = { namespace = "^my-overlay$" },
---     no_anim = true,
--- })
--- overlayLayerRule:set_enabled(false)
+local overlayLayerRule = hl.layer_rule({
+    match        = { namespace = "launcher" },
+    -- no_anim = true,
+    blur         = true,
+    ignore_alpha = 0.2,
+    blur_popups  = true,
+
+})
+overlayLayerRule:set_enabled(true)
 
 -- Hyprland-run windowrule
 hl.window_rule({
@@ -418,4 +495,5 @@ hl.window_rule({
 hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
     hl.exec_cmd("hyprpaper")
+    hl.exec_cmd("hypridle")
 end)

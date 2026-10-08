@@ -6,7 +6,6 @@
 }
 
 window#waybar {
-    padding:4px 0;
     background-color: transparent;
     color: #ffffff;
     transition-property: background-color;
@@ -45,29 +44,41 @@ button {
 }
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
-button:hover {
-    background: inherit;
-    box-shadow: inset 0 -3px #ffffff;
-}
+
 
 /* you can set a style on hover for any module like this */
 #pulseaudio:hover {
     /*background-color: #a37800;*/
 }
+#workspaces {
+    padding:0 4px;
+}
 
 #workspaces button {
-    padding: 0 5px;
+    padding: 0 10px;
     background-color: transparent;
-    color: #ffffff;
+    color:rgba(35, 203, 30, 1.0);
+    transition: background-color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    border-radius:4px;
+    margin:0 2px;
 }
 
 #workspaces button:hover {
-    background: rgba(0, 0, 0, 0.2);
+    /*padding: 0 8px;*/
+    background:transparent;
+    background-color: #000000;
+    color:rgba(35, 203, 30, 1.0);
 }
 
+/*#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}*/
+
 #workspaces button.focused, #workspaces button.active {
-    /*background-color: #64727D;*/
-    box-shadow: inset 0 -3px #ffffff;
+    /*padding: 0 18px;*/
+    background-color:rgba(35, 203, 30, 1.0);
+    color: rgba(10, 25, 10, 1);
+    font-weight: bold;
 }
 
 #workspaces button.urgent {
@@ -103,7 +114,7 @@ button:hover {
 
 #window,
 #workspaces {
-    margin: 0 4px;
+    margin: 0;
 }
 
 /* If workspaces is the leftmost module, omit left margin */
@@ -117,12 +128,18 @@ button:hover {
     margin-right: 0;
 }
 
-.module {
-    border-radius:48px;
+.modules-left, .modules-right, .modules-center {
     background-color: rgba(10, 25, 10, 0.5);
-    padding: 3px 16px;
+    padding:4px;
+}
+
+.module {
+    padding: 0px 12px;
+    background-color: rgba(10, 25, 10, 0.5);
     color: rgba(35, 203, 30, 1.0);
-    transition: 0.125s ease-in-out;
+    border-radius:4px;
+    font-weight:600;
+    transition: 0.125s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 #battery.charging {
@@ -131,11 +148,10 @@ button:hover {
     color: rgba(10, 25, 10, 1);
 }
 
-#clock {
+#clock{
     /*background-color: #64727D;*/
-    font-size:24px;
-    font-weight:800;
-
+    font-weight:600;
+    font-size:12px;
 }
 
 #battery {
@@ -231,6 +247,9 @@ label:focus {
     /*background-color: #66cc99;*/
     color: #2a5c45;
     min-width: 100px;
+}
+#custom-power {
+    padding:0 20px;
 }
 
 #custom-media.custom-spotify {
